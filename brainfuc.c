@@ -23,27 +23,16 @@ void	clear_arrays() {
 		string_list[i] = ' ';
 	}
 }
-void increment_the_byte() {
-	number_list[currentpos] += 1;
-}
-void decrement_the_byte() {
-	number_list[currentpos] -= 1;
-}
-void increment_the_pointer() {
-	currentpos++;
-}
-void decrement_the_pointer() {
-	currentpos--;
-}
+
 void brainfuck(char *instructions) {
 	clear_arrays();
 	int instructionlen = strlen(instructions);	
 	if (instructionlen > 0) {
 		for(int i = 0; i < instructionlen; i++) {
 			if (instructions[i] == '>') {
-				increment_the_pointer();
+				currentpos++;
 			} else if (instructions[i] == '<') {
-				decrement_the_pointer();
+				currentpos--;
 			} else if (instructions[i] == ']') {
 				if (number_list[noticeposition_loopvar] > 0) {
 					i = noticeposition_loop;
@@ -52,9 +41,9 @@ void brainfuck(char *instructions) {
 				noticeposition_loop = i;
 				noticeposition_loopvar = currentpos;
 			} else if (instructions[i] == '-') {
-				decrement_the_byte();
+				number_list[currentpos] -= 1;
 			} else if (instructions[i] == '+') {
-				increment_the_byte();
+				number_list[currentpos] += 1;
 			} else if (instructions[i] == ',') {
 				number_list[currentpos] = getchar();
 			} else if (instructions[i] == '.') {
@@ -70,6 +59,14 @@ void brainfuck(char *instructions) {
 				}
 				char *pcte = commandtoexe;
 				system(pcte);
+			} else if (instructions[i] == '!') {
+				if (number_list[currentpos] == number_list[currentpos+1]) {
+					int temporaryi = i;
+					while(instructions[temporaryi] != ';') {
+						temporaryi++;
+					}
+					i = temporaryi;
+				}
 			}
 		}
 	}	
